@@ -2,7 +2,17 @@
 
 Direct APK download for Invoicerr — a from-scratch invoicing app.
 
-## 1.2 — current
+## 1.3 — current
+
+- `Invoicerr-1.3.apk` — package `com.olltaterfx.invoicerr`, version 1.3 (code 4), Android 7.0+
+- sha256 `020dc2057560aa4f6e6a060dcfa0e75eed8fdcd76129ab6e5ec55010ebe3d61b`
+- 4,844,655 bytes
+- Dark glass interface plus motion: staggered entrances, wipe-in chart, count-up hero, ripple and press feedback, animated tab pills.
+- No login, no ads, no subscription, no telemetry. Local SQLite only.
+
+Download: https://rxnoae.github.io/ledgerstudio-apk/Invoicerr-1.3.apk
+
+## 1.2
 
 - `Invoicerr-1.2.apk` — package `com.olltaterfx.invoicerr`, version 1.2 (code 3), Android 7.0+
 - sha256 `e46193b44af722b5bed3e911d058ecdfb33c712632c6b8b5106ccc0e091498cf`
