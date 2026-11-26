@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invoicerr — light preview</title>
+<style>
+  :root{
+    --bg:#EDECF1;
+    --app:#F4F3F7;
+    --surface:#FFFFFF;
+    --surface-2:#FAF9FC;
+    --line:#E7E3EE;
+    --line-soft:#EFECF4;
+    --ink:#141018;
+    --ink-2:#5C5566;
+    --ink-3:#8C8598;
+    --accent:#6B4EFF;
+    --accent-2:#8E6FF0;
+    --accent-soft:#EFEAFF;
+    --accent-deep:#4B32C9;
+    --ok:#0E9F6E;
+    --ok-soft:#E4F7EF;
+    --warn:#A65A06;
+    --warn-soft:#FBF0DE;
+    --danger:#CC2B54;
+    --danger-soft:#FCE8EE;
+    --radius:20px;
+    --shadow:0 1px 2px rgba(20,16,24,.04), 0 10px 30px -16px rgba(20,16,24,.16);
+  }
+  *{box-sizing:border-box; -webkit-font-smoothing:antialiased}
+  html,body{margin:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font:400 14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    padding:48px 20px 72px;
+    display:flex; flex-direction:column; align-items:center; gap:44px;
+  }
+  .head{max-width:980px; width:100%}
+  .eyebrow{font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent-deep); font-weight:650; margin:0 0 10px}
+  h1{font-size:40px; line-height:1.04; letter-spacing:-.035em; margin:0 0 12px; font-weight:650}
+  .sub{color:var(--ink-2); max-width:56ch; font-size:15px; margin:0}
+  .row{display:flex; gap:34px; flex-wrap:wrap; justify-content:center; align-items:flex-start}
+  .col{display:flex; flex-direction:column; gap:12px; align-items:center}
+  .cap{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+
+  /* device */
+  .device{
+    width:390px; height:844px; border-radius:46px; background:var(--app);
+    box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 40px 80px -40px rgba(20,16,24,.45), 0 2px 6px rgba(20,16,24,.10);
+    padding:10px; position:relative; overflow:hidden;
+  }
+  .screen{
+    width:100%; height:100%; border-radius:37px; overflow:hidden;
+    background:
+      radial-gradient(560px 420px at -10% -14%, rgba(107,78,255,.16), rgba(107,78,255,0) 70%),
+      radial-gradient(480px 380px at 108% 104%, rgba(142,111,240,.13), rgba(142,111,240,0) 70%),
+      var(--app);
+    display:flex; flex-direction:column;
+  }
+  .status{display:flex; justify-content:space-between; align-items:center; padding:12px 22px 4px; font-size:12px; font-weight:650; color:var(--ink)}
+  .dots{display:flex; gap:4px; align-items:center}
+  .dots i{display:block; width:4px; height:4px; border-radius:50%; background:var(--ink); opacity:.75}
+  .scroll{flex:1; overflow:hidden; padding:6px 18px 0}
+
+  /* header */
+  .hdr{display:flex; align-items:center; gap:11px; margin-bottom:14px}
+  .avatar{
+    width:40px; height:40px; border-radius:50%;
+    background:linear-gradient(135deg,#8E6FF0,#6B4EFF);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:650; letter-spacing:.02em;
+    box-shadow:0 6px 16px -8px rgba(107,78,255,.8);
+  }
+  .who{flex:1; min-width:0}
+  .who .k{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); font-weight:650}
+  .who .n{font-size:17px; font-weight:650; letter-spacing:-.02em; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .ibtn{
+    width:38px; height:38px; border-radius:50%; background:var(--surface);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1px 2px rgba(20,16,24,.04); color:var(--ink-2);
+  }
+  .ibtn.primary{
+    background:linear-gradient(135deg,#8E6FF0,#6B4EFF); border:0; color:#fff;
+    box-shadow:0 10px 22px -12px rgba(107,78,255,.95);
+  }
+  .search{
+    display:flex; align-items:center; gap:9px; padding:11px 14px; border-radius:999px;
+    background:var(--surface); border:1px solid var(--line); color:var(--ink-3); font-size:13px;
+    box-shadow:0 1px 2px rgba(20,16,24,.03); margin-bottom:14px;
+  }
+
+  /* hero */
+  .hero{
+    position:relative; border-radius:24px; padding:17px;
+    background:linear-gradient(158deg,#F1ECFF 0%,#FBFAFF 58%,#FFFFFF 100%);
+    border:1px solid #E2DBFB;
+    box-shadow:0 1px 2px rgba(20,16,24,.04), 0 18px 40px -26px rgba(107,78,255,.55);
+    margin-bottom:12px;
+  }
+  .hero .top{display:flex; align-items:center; justify-content:space-between}
+  .lbl{font-size:9.5px; letter-spacing:.17em; text-transform:uppercase; color:var(--ink-3); font-weight:650}
+  .chip{
+    font-size:11px; font-weight:650; color:var(--accent-deep); background:#fff;
+    border:1px solid #E2DBFB; padding:4px 9px; border-radius:999px;
+  }
+  .big{font-size:34px; font-weight:700; letter-spacing:-1.4px; margin:9px 0 8px; font-variant-numeric:tabular-nums}
+  .big small{font-size:20px; color:var(--ink-3); letter-spacing:-.4px; font-weight:600}
+  .delta{display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--ink-2)}
+  .pill{font-size:10.5px; font-weight:700; padding:4px 8px; border-radius:999px; letter-spacing:.01em}
+  .pill.ok{color:var(--ok); background:var(--ok-soft)}
+  .pill.warn{color:var(--warn); background:var(--warn-soft)}
+  .pill.bad{color:var(--danger); background:var(--danger-soft)}
+  .pill.neutral{color:var(--ink-2); background:#F1EFF5}
+  .rule{height:1px; background:#E7E1F6; margin:14px 0 12px}
+  .stats{display:flex; gap:16px}
+  .stat{flex:1}
+  .stat .v{font-size:16px; font-weight:700; letter-spacing:-.4px; margin-top:3px; font-variant-numeric:tabular-nums}
+  .stat .v.bad{color:var(--danger)}
+
+  /* cards */
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:16px; margin-bottom:12px;
+  }
+  .card.tight{padding:0; overflow:hidden}
+  .cardhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:2px}
+  .cardhead .t{font-size:15px; font-weight:650; letter-spacing:-.01em}
+  .cardhead .s{font-size:11.5px; color:var(--ink-3); margin-top:2px}
+  .seg{display:flex; padding:3px; border-radius:999px; background:#F1EFF6; border:1px solid var(--line-soft)}
+  .seg span{font-size:11px; font-weight:650; padding:5px 11px; border-radius:999px; color:var(--ink-3)}
+  .seg .on{color:#fff; background:linear-gradient(135deg,#8E6FF0,#6B4EFF); box-shadow:0 6px 14px -8px rgba(107,78,255,.9)}
+  svg.area{display:block; width:100%; height:150px; margin-top:6px}
+
+  /* actions */
+  .acts{display:flex; gap:10px; margin-bottom:6px}
+  .act{
+    flex:1; border-radius:18px; padding:14px 10px; text-align:center; font-size:12px; font-weight:650;
+    background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); color:var(--ink);
+  }
+  .act.fill{
+    background:linear-gradient(135deg,#8E6FF0,#6B4EFF); border:0; color:#fff;
+    box-shadow:0 14px 30px -18px rgba(107,78,255,.95);
+  }
+  .act .ic{margin:0 auto 7px; width:18px; height:18px; display:block}
+  .sec{display:flex; align-items:baseline; justify-content:space-between; margin:18px 2px 9px}
+  .sec .t{font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); font-weight:650}
+  .sec .a{font-size:11.5px; color:var(--accent-deep); font-weight:650}
+
+  /* list rows */
+  .lrow{display:flex; align-items:center; gap:11px; padding:11px 16px}
+  .lrow + .lrow{border-top:1px solid var(--line-soft)}
+  .mono{
+    width:34px; height:34px; border-radius:50%; background:#F3F1F8; color:var(--ink-2);
+    display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; letter-spacing:.02em;
+  }
+  .lrow .mid{flex:1; min-width:0}
+  .lrow .nm{font-size:13.5px; font-weight:650; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .lrow .sm{font-size:11px; color:var(--ink-3); margin-top:2px}
+  .lrow .rt{text-align:right}
+  .lrow .amt{font-size:13.5px; font-weight:700; letter-spacing:-.3px; font-variant-numeric:tabular-nums}
+  .lrow .rt .pill{margin-top:4px; display:inline-block}
+
+  /* metrics */
+  .grid2{display:flex; gap:10px}
+  .metric{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:13px; box-shadow:var(--shadow)}
+  .metric .v{font-size:17px; font-weight:700; letter-spacing:-.5px; margin-top:5px; font-variant-numeric:tabular-nums}
+  .metric .s{font-size:10.5px; color:var(--ink-3); margin-top:2px}
+  .metric .v.good{color:var(--ok)}
+
+  /* tab bar */
+  .tabbar{
+    margin-top:auto; background:rgba(255,255,255,.86); backdrop-filter:blur(14px);
+    border-top:1px solid var(--line); padding:8px 10px 14px; display:flex;
+  }
+  .tab{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px}
+  .tab .pillIcon{
+    width:46px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center; color:var(--ink-3);
+  }
+  .tab.on .pillIcon{background:linear-gradient(135deg,#8E6FF0,#6B4EFF); color:#fff; box-shadow:0 8px 18px -10px rgba(107,78,255,.95)}
+  .tab .cap2{font-size:9.5px; font-weight:650; color:var(--ink-3)}
+  .tab.on .cap2{color:var(--accent-deep)}
+
+  /* invoices screen bits */
+  .pagehead{display:flex; align-items:center; justify-content:space-between; padding:6px 2px 12px}
+  .pagehead h2{margin:0; font-size:26px; letter-spacing:-.035em; font-weight:700}
+  .chips{display:flex; gap:7px; margin-bottom:10px}
+  .fchip{font-size:11.5px; font-weight:650; padding:7px 12px; border-radius:999px; background:var(--surface); border:1px solid var(--line); color:var(--ink-2)}
+  .fchip.on{background:linear-gradient(135deg,#8E6FF0,#6B4EFF); color:#fff; border:0; box-shadow:0 8px 18px -12px rgba(107,78,255,.9)}
+  .docrow{
+    display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--line);
+    border-radius:16px; padding:12px 13px; box-shadow:0 1px 2px rgba(20,16,24,.03); margin-bottom:9px;
+  }
+  .docrow .mid{flex:1; min-width:0}
+
+  /* tokens */
+  .tokens{width:390px; background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:20px; box-shadow:var(--shadow)}
+  .swatches{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:12px 0 20px}
+  .sw{height:52px; border-radius:12px; border:1px solid rgba(20,16,24,.06); position:relative}
+  .sw span{position:absolute; left:8px; bottom:6px; font-size:9px; font-weight:700; letter-spacing:.04em; color:#fff; mix-blend-mode:difference}
+  .spec{display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line-soft); font-size:12.5px}
+  .spec:last-child{border:0}
+  .spec b{font-weight:650}
+  .spec i{font-style:normal; color:var(--ink-3)}
+  .tk{display:flex; align-items:baseline; gap:10px; padding:7px 0; border-bottom:1px solid var(--line-soft)}
+  .tk:last-child{border:0}
+  .tk .demo{flex:1}
+  .tk code{font:600 10px/1 ui-monospace,monospace; color:var(--ink-3)}
+  .note{max-width:980px; width:100%; color:var(--ink-2); font-size:13px; border-top:1px solid #DCD8E4; padding-top:18px}
+  .note b{color:var(--ink); font-weight:650}
+  @media (max-width:460px){
+    .device{width:100%; height:780px}
+    h1{font-size:30px}
+    .tokens{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <p class="eyebrow">Invoicerr · light</p>
+  <h1>A light interface that still looks paid for.</h1>
+  <p class="sub">Cool off-white ground, true white cards held by a hairline and one soft shadow, and a single violet accent. Structure comes from type weight and spacing, not from boxes inside boxes.</p>
+</header>
+
+<div class="row">
+
+  <!-- ================= DASHBOARD ================= -->
+  <div class="col">
+    <div class="device">
+      <div class="screen">
+        <div class="status">
+          <span>9:41</span>
+          <div class="dots"><i></i><i></i><i></i><span style="font-size:10.5px;font-weight:700">100%</span></div>
+        </div>
+        <div class="scroll">
+
+          <div class="hdr">
+            <div class="avatar">IM</div>
+            <div class="who">
+              <div class="k">Welcome back</div>
+              <div class="n">Isabel Moreno Studio</div>
+            </div>
+            <div class="ibtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M6.2 16.4v-5.2a5.8 5.8 0 0 1 11.6 0v5.2l1.6 2.2H4.6z"/><path d="M10.2 20.6c.6.8 3 .8 3.6 0"/>
+              </svg>
+            </div>
+            <div class="ibtn primary">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="10.8" cy="10.8" r="5.9"/><path d="M15.2 15.2 19.6 19.6" stroke-linecap="round"/>
+            </svg>
+            Search invoices, customers
+          </div>
+
+          <div class="hero">
+            <div class="top">
+              <span class="lbl">Total revenue</span>
+              <span class="chip">USD</span>
+            </div>
+            <div class="big">$12,480<small>.00</small></div>
+            <div class="delta">
+              <span class="pill ok">&#8599; +12.4%</span>
+              <span>vs last month</span>
+            </div>
+            <div class="rule"></div>
+            <div class="stats">
+              <div class="stat">
+                <div class="lbl">Outstanding</div>
+                <div class="v">$3,150.00</div>
+              </div>
+              <div class="stat">
+                <div class="lbl">Overdue</div>
+                <div class="v bad">$860.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardhead">
+              <div>
+                <div class="t">Revenue</div>
+                <div class="s">Last 12 months</div>
+              </div>
+              <div class="seg"><span>6M</span><span class="on">12M</span></div>
+            </div>
+            <svg class="area" viewBox="0 0 330 150" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#6B4EFF" stop-opacity=".26"/>
+                  <stop offset="1" stop-color="#6B4EFF" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <g stroke="#EFECF4" stroke-width="1" stroke-dasharray="2 5">
+                <line x1="34" y1="18" x2="328" y2="18"/>
+                <line x1="34" y1="50" x2="328" y2="50"/>
+                <line x1="34" y1="82" x2="328" y2="82"/>
+                <line x1="34" y1="114" x2="328" y2="114"/>
+              </g>
+              <text x="0" y="21" font-size="9" fill="#8C8598" font-weight="600">8k</text>
+              <text x="0" y="53" font-size="9" fill="#8C8598" font-weight="600">6k</text>
+              <text x="0" y="85" font-size="9" fill="#8C8598" font-weight="600">4k</text>
+              <text x="0" y="117" font-size="9" fill="#8C8598" font-weight="600">2k</text>
+              <path d="M34,104 C48,96 62,84 76,88 C90,92 104,74 118,70 C132,66 146,78 160,72 C174,66 188,44 202,48 C216,52 230,40 244,34 C258,28 272,46 286,38 C300,30 314,26 328,22 L328,132 L34,132 Z" fill="url(#fill)"/>
+              <path d="M34,104 C48,96 62,84 76,88 C90,92 104,74 118,70 C132,66 146,78 160,72 C174,66 188,44 202,48 C216,52 230,40 244,34 C258,28 272,46 286,38 C300,30 314,26 328,22" fill="none" stroke="#6B4EFF" stroke-width="2.4" stroke-linecap="round"/>
+              <line x1="328" y1="22" x2="328" y2="132" stroke="#6B4EFF" stroke-opacity=".28" stroke-width="1" stroke-dasharray="3 4"/>
+              <circle cx="328" cy="22" r="5.5" fill="none" stroke="#6B4EFF" stroke-width="2"/>
+              <circle cx="328" cy="22" r="3" fill="#fff"/>
+              <g font-size="9" fill="#8C8598" font-weight="600">
+                <text x="34" y="146">Jan</text><text x="120" y="146">Apr</text>
+                <text x="206" y="146">Jul</text><text x="300" y="146">Oct</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="acts">
+            <div class="act fill">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              Invoice
+            </div>
+            <div class="act">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.6" y="3" width="14.8" height="18" rx="2.6"/><path d="M8.2 9h7.6M8.2 13h7.6M8.2 17h4.4" stroke-linecap="round"/></svg>
+              Quote
+            </div>
+            <div class="act">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.1 7.1L21 12l-6.9 1.9L12 21l-2.1-7.1L3 12l6.9-1.9z"/></svg>
+              Expense
+            </div>
+          </div>
+
+          <div class="sec"><span class="t">Needs attention</span><span class="a">See all</span></div>
+
+          <div class="card tight">
+            <div class="lrow">
+              <div class="mono">NC</div>
+              <div class="mid">
+                <div class="nm">Northwind Coffee</div>
+                <div class="sm">INV-0042 &middot; 12 Nov</div>
+              </div>
+              <div class="rt">
+                <div class="amt">$1,240.00</div>
+                <span class="pill warn">Partial</span>
+              </div>
+            </div>
+            <div class="lrow">
+              <div class="mono">HM</div>
+              <div class="mid">
+                <div class="nm">Harbour &amp; Moss</div>
+                <div class="sm">INV-0039 &middot; 2 Nov</div>
+              </div>
+              <div class="rt">
+                <div class="amt">$860.00</div>
+                <span class="pill bad">Overdue</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec"><span class="t">This month</span></div>
+          <div class="grid2">
+            <div class="metric">
+              <div class="lbl">Expenses</div>
+              <div class="v">$2.4k</div>
+              <div class="s">this month</div>
+            </div>
+            <div class="metric">
+              <div class="lbl">Profit</div>
+              <div class="v good">$10.1k</div>
+              <div class="s">in the black</div>
+            </div>
+          </div>
+          <div style="height:12px"></div>
+        </div>
+
+        <div class="tabbar">
+          <div class="tab on">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.2 10.2 12 3.2l8.8 7v10.2h-6.4v-6.2H9.6v6.2H3.2z"/></svg>
+            </div>
+            <span class="cap2">Home</span>
+          </div>
+          <div class="tab">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.6" y="3" width="14.8" height="18" rx="2.6"/><path d="M8.2 9h7.6M8.2 13h7.6M8.2 17h4.4" stroke-linecap="round"/></svg>
+            </div>
+            <span class="cap2">Invoices</span>
+          </div>
+          <div class="tab">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9.2" cy="8.4" r="3.2"/><path d="M3.2 20c0-3.8 2.8-5.8 6-5.8s6 2 6 5.8" stroke-linecap="round"/><circle cx="17.4" cy="9.6" r="2.5"/></svg>
+            </div>
+            <span class="cap2">People</span>
+          </div>
+          <div class="tab">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5.6" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.4" cy="12" r="1.7"/></svg>
+            </div>
+            <span class="cap2">More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span class="cap">Dashboard</span>
+  </div>
+
+  <!-- ================= INVOICES ================= -->
+  <div class="col">
+    <div class="device">
+      <div class="screen">
+        <div class="status">
+          <span>9:41</span>
+          <div class="dots"><i></i><i></i><i></i><span style="font-size:10.5px;font-weight:700">100%</span></div>
+        </div>
+        <div class="scroll">
+          <div class="pagehead">
+            <h2>Invoices</h2>
+            <div class="ibtn primary" style="border-radius:14px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="fchip on">Invoices</span>
+            <span class="fchip">Quotes</span>
+            <span class="fchip">Credits</span>
+          </div>
+          <div class="search" style="margin-bottom:10px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="5.9"/><path d="M15.2 15.2 19.6 19.6" stroke-linecap="round"/></svg>
+            Search by number, customer, reference
+          </div>
+          <div class="chips" style="overflow:hidden">
+            <span class="fchip on">All</span>
+            <span class="fchip">Draft</span>
+            <span class="fchip">Sent</span>
+            <span class="fchip">Paid</span>
+          </div>
+
+          <div class="docrow">
+            <div class="mono">NC</div>
+            <div class="mid">
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="font-size:13.5px;font-weight:650">INV-0042</span>
+                <span class="pill warn">Partial</span>
+              </div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3);margin-top:3px">Northwind Coffee</div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3)">12 Nov</div>
+            </div>
+            <div class="rt">
+              <div class="amt">$1,240.00</div>
+              <div style="font-size:11px;font-weight:650;color:var(--warn);margin-top:3px">$640.00 due</div>
+            </div>
+          </div>
+
+          <div class="docrow">
+            <div class="mono">HM</div>
+            <div class="mid">
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="font-size:13.5px;font-weight:650">INV-0041</span>
+                <span class="pill ok">Paid</span>
+              </div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3);margin-top:3px">Harbour &amp; Moss</div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3)">8 Nov</div>
+            </div>
+            <div class="rt">
+              <div class="amt">$2,890.00</div>
+            </div>
+          </div>
+
+          <div class="docrow">
+            <div class="mono">LD</div>
+            <div class="mid">
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="font-size:13.5px;font-weight:650">INV-0040</span>
+                <span class="pill bad">Overdue</span>
+              </div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3);margin-top:3px">Lumen Dental</div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3)">2 Nov</div>
+            </div>
+            <div class="rt">
+              <div class="amt">$860.00</div>
+              <div style="font-size:11px;font-weight:650;color:var(--danger);margin-top:3px">$860.00 due</div>
+            </div>
+          </div>
+
+          <div class="docrow">
+            <div class="mono">SA</div>
+            <div class="mid">
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="font-size:13.5px;font-weight:650">INV-0039</span>
+                <span class="pill neutral">Draft</span>
+              </div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3);margin-top:3px">Studio Alder</div>
+              <div class="sm" style="font-size:11px;color:var(--ink-3)">30 Oct</div>
+            </div>
+            <div class="rt">
+              <div class="amt">$4,100.00</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <div class="lbl">Summary</div>
+            <div class="spec" style="border-color:var(--line-soft)"><span>Unpaid</span><b>$1,500.00</b></div>
+            <div class="spec" style="border-color:var(--line-soft)"><span>Overdue</span><b style="color:var(--danger)">$860.00</b></div>
+            <div class="spec" style="border-color:var(--line-soft)"><span>Paid this month</span><b style="color:var(--ok)">$8,940.00</b></div>
+          </div>
+        </div>
+
+        <div class="tabbar">
+          <div class="tab">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.2 10.2 12 3.2l8.8 7v10.2h-6.4v-6.2H9.6v6.2H3.2z"/></svg>
+            </div>
+            <span class="cap2">Home</span>
+          </div>
+          <div class="tab on">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.6" y="3" width="14.8" height="18" rx="2.6"/><path d="M8.2 9h7.6M8.2 13h7.6M8.2 17h4.4" stroke-linecap="round"/></svg>
+            </div>
+            <span class="cap2">Invoices</span>
+          </div>
+          <div class="tab">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9.2" cy="8.4" r="3.2"/><path d="M3.2 20c0-3.8 2.8-5.8 6-5.8s6 2 6 5.8" stroke-linecap="round"/><circle cx="17.4" cy="9.6" r="2.5"/></svg>
+            </div>
+            <span class="cap2">People</span>
+          </div>
+          <div class="tab">
+            <div class="pillIcon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5.6" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.4" cy="12" r="1.7"/></svg>
+            </div>
+            <span class="cap2">More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span class="cap">Documents</span>
+  </div>
+
+  <!-- ================= TOKENS ================= -->
+  <div class="col">
+    <div class="tokens">
+      <div class="lbl">Palette</div>
+      <div class="swatches">
+        <div class="sw" style="background:#F4F3F7"><span>BG</span></div>
+        <div class="sw" style="background:#FFFFFF"><span style="color:#8C8598;mix-blend-mode:normal">CARD</span></div>
+        <div class="sw" style="background:#E7E3EE"><span style="color:#5C5566;mix-blend-mode:normal">LINE</span></div>
+        <div class="sw" style="background:#141018"><span>INK</span></div>
+        <div class="sw" style="background:#6B4EFF"><span>ACCENT</span></div>
+        <div class="sw" style="background:#8E6FF0"><span>ACCENT 2</span></div>
+        <div class="sw" style="background:#EFEAFF"><span style="color:#4B32C9;mix-blend-mode:normal">SOFT</span></div>
+        <div class="sw" style="background:#0E9F6E"><span>OK</span></div>
+      </div>
+
+      <div class="lbl">Type</div>
+      <div class="tk"><span class="demo" style="font-size:28px;font-weight:700;letter-spacing:-1.2px">$12,480.00</span><code>34 / 700 / -1.4</code></div>
+      <div class="tk"><span class="demo" style="font-size:17px;font-weight:650;letter-spacing:-.3px">Northwind Coffee</span><code>17 / 650</code></div>
+      <div class="tk"><span class="demo" style="font-size:13.5px;color:#5C5566">INV-0042 &middot; 12 Nov</span><code>13 / 400</code></div>
+      <div class="tk"><span class="demo" style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:650;color:#8C8598">Total revenue</span><code>10 / 650</code></div>
+
+      <div class="lbl" style="margin-top:18px">Rules</div>
+      <div class="spec"><span>Ground</span><i>#F4F3F7, two violet blooms</i></div>
+      <div class="spec"><span>Card</span><i>#FFF, 1px #E7E3EE, 20r</i></div>
+      <div class="spec"><span>Shadow</span><i>0 10px 30px -16px / 16%</i></div>
+      <div class="spec"><span>Radius</span><i>20 card · 24 hero · 999 pill</i></div>
+      <div class="spec"><span>Accent</span><i>one gradient, actions only</i></div>
+      <div class="spec"><span>Numbers</span><i>tabular, tight tracking</i></div>
+    </div>
+    <span class="cap">System</span>
+  </div>
+
+</div>
+
+<p class="note">
+  <b>What changed from the dark build:</b> the ground is a cool off-white instead of near-black, cards are true white with a hairline and one soft shadow instead of glass gradients, and the violet is deeper (<b>#6B4EFF</b>) so it carries on light without glowing. The hero keeps a violet wash so the top of the screen still has a lit surface, and every number is tabular with tight tracking so columns line up. Dark mode is gone from this build — say the word and I'll make the palette runtime-switchable instead of constants.
+</p>
+
+</body>
+</html>
