@@ -2,7 +2,17 @@
 
 Direct APK download for Invoicerr — a from-scratch invoicing app.
 
-## 1.3 — current
+## 2.0 — current (Flutter)
+
+- `Invoicerr-2.0.apk` — package `com.olltaterfx.invoicerr`, version 2.0.0 (code 5), Android 7.0+
+- sha256 `f3e602812a84942835b33c251b39ff246a04c625766f8c6eedabcb9b8d6d6a29`
+- 52,520,679 bytes
+- Full Flutter rebuild. Same schema, same features, dark glass interface with motion.
+- Signed with a committed release key, so updates from here install over each other.
+
+Download: https://rxnoae.github.io/ledgerstudio-apk/Invoicerr-2.0.apk
+
+## 1.3
 
 - `Invoicerr-1.3.apk` — package `com.olltaterfx.invoicerr`, version 1.3 (code 4), Android 7.0+
 - sha256 `020dc2057560aa4f6e6a060dcfa0e75eed8fdcd76129ab6e5ec55010ebe3d61b`
